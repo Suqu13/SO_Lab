@@ -1,21 +1,28 @@
+import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Appeals {
-    int pagesNumber = 10;
-    int appealsNumber = 1000;
+    private int appealsNumber;
+    private int bound;
 
+    public Appeals(int appealsNumber, int bound) {
+        this.appealsNumber = appealsNumber;
+        this.bound = bound;
+
+    }
 
     public ArrayList<Integer> creatingAppeals() {
         ArrayList<Integer> appeals = new ArrayList<>();
         int i = 0;
-        while (i< appealsNumber) {
-            Random rand = new Random();
-            int ap = rand.nextInt(30);
+        while (i < appealsNumber) {
+            SecureRandom rand = new SecureRandom();
+            int ap = rand.nextInt(bound);
             if (!appeals.isEmpty()) {
-                while (ap == appeals.get(appeals.size() - 1)) {
-                    ap = rand.nextInt(30);
+                boolean t = true;
+                while (t) {
+                    int k = rand.nextInt(5);
+                    ap = appeals.get(appeals.size() - 1) - 2 + k;
+                    if (!(ap == appeals.get(appeals.size() - 1) || ap < 0 || ap > bound)) t = false;
                 }
             }
             appeals.add(ap);
@@ -24,11 +31,4 @@ public class Appeals {
         return appeals;
     }
 
-    public static void main(String[] args) {
-        Appeals appeals = new Appeals();
-        ArrayList<Integer> list = appeals.creatingAppeals();
-        for (int i: list) {
-            System.out.print(" " + i  );
-        }
-    }
 }
