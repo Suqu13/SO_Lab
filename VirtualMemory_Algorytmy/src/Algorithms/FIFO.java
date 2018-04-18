@@ -1,17 +1,19 @@
+package Algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class FIFO {
+public class FIFO extends Algorithm {
 
 
     private boolean lackInFrames = true;
 
     private List<Integer> frames;
-    private ArrayList<Integer> appeals;
+    private ArrayList<Integer> reference;
     int size;
 
-    public FIFO(ArrayList<Integer> appeals, int size) {
-        this.appeals = appeals;
+    public FIFO(ArrayList<Integer> reference, int size) {
+        this.reference = reference;
         this.size = size;
         frames = new ArrayList<Integer>();
 
@@ -23,15 +25,15 @@ public class FIFO {
         boolean lackInFrames = true;
 
 
-        for (int appeal : appeals) {
+        for (int reference : reference) {
 
             if (frames.size() < size) {
-                frames.add(appeal);
+                frames.add(reference);
                 pageErrors++;
                 lackInFrames = false;
             } else {
                 for (int i = 0; i < frames.size(); i++) {
-                    if (frames.get(i) == appeal) {
+                    if (frames.get(i) == reference) {
                         lackInFrames = false;
                         break;
                     }
@@ -40,7 +42,7 @@ public class FIFO {
 
             if (lackInFrames) {
                 frames.remove(0);
-                frames.add(appeal);
+                frames.add(reference);
                 pageErrors++;
             }
             lackInFrames = true;
@@ -49,15 +51,19 @@ public class FIFO {
         return pageErrors;
     }
 
-    public void AVG_FIFO() {
+    private void AVG_FIFO(int g) {
         int n = 0;
-        int result = 0;
-        while (n < 1000) {
+        double result = 0;
+        while (n < g) {
 
             result += runFIFO();
             n++;
         }
-        System.out.println("FIFO: " + (int) Math.floor(result / n));
+        System.out.printf("%6s %.2f\n","Algorithms.FIFO: ", (result / n));
+    }
 
+    @Override
+    public void simulate(int number) {
+        AVG_FIFO(number);
     }
 }

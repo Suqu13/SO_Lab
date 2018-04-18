@@ -1,12 +1,14 @@
+package Algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class LRU {
-    private ArrayList<Integer> appeals;
+public class LRU extends Algorithm {
+    private ArrayList<Integer> reference;
     int size;
 
-    public LRU(ArrayList<Integer> appeals, int size) {
-        this.appeals = appeals;
+    public LRU(ArrayList<Integer> reference, int size) {
+        this.reference = reference;
         this.size = size;
 
     }
@@ -35,10 +37,10 @@ public class LRU {
         ArrayList<Integer> time = new ArrayList<>();
 
 
-        for (int j = 0; j < appeals.size(); j++) {
+        for (int j = 0; j < reference.size(); j++) {
 
             if (frames.size() < size) {
-                frames.add(appeals.get(j));
+                frames.add(reference.get(j));
 
                 for (int i = 0; i < time.size(); i++) {
                     time.set(i, time.get(i) + 1);
@@ -49,10 +51,10 @@ public class LRU {
                 lackInFrames = false;
             } else {
                 for (int i = 0; i < frames.size(); i++) {
-                    if (frames.get(i) == appeals.get(j)) {
+                    if (frames.get(i) == reference.get(j)) {
 
                         for (int l = 0; l < time.size(); l++) {
-                            time.set(l, time.get(i) + 1);
+                            time.set(l, time.get(l) + 1);
                         }
 
                         time.set(i, 0);
@@ -62,7 +64,6 @@ public class LRU {
                 }
             }
 
-
             if (lackInFrames) {
                 int index = findMaxTime(time);
 
@@ -71,25 +72,28 @@ public class LRU {
                 }
 
                 time.set(index, 0);
-                frames.add(index, appeals.get(j));
+                frames.add(index, reference.get(j));
                 frames.remove(index + 1);
                 pageErrors++;
             }
             lackInFrames = true;
-
         }
         return pageErrors;
     }
 
-    public void AVG_LRU() {
+    private void AVG_LRU(int g) {
         int n = 0;
-        int result = 0;
-        while (n < 1000) {
+        double result = 0;
+        while (n < g) {
 
             result += runLRU();
             n++;
         }
-        System.out.println("LRU: " + (int) Math.floor(result / n));
+        System.out.printf("%6s %.2f\n","Algorithms.LRU: ",  (result / n));    }
+
+    @Override
+    public void simulate(int number) {
+        AVG_LRU(number);
     }
 }
 

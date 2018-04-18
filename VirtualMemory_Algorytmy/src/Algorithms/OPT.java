@@ -1,13 +1,15 @@
+package Algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class OPT {
+public class OPT extends Algorithm {
 
-    private ArrayList<Integer> appeals;
+    private ArrayList<Integer> reference;
     int size;
 
-    public OPT(ArrayList<Integer> appeals, int size) {
-        this.appeals = appeals;
+    public OPT(ArrayList<Integer> reference, int size) {
+        this.reference = reference;
         this.size = size;
 
     }
@@ -18,14 +20,14 @@ public class OPT {
         boolean lackInFrames = true;
         List<Integer> frames = new ArrayList<Integer>();
 
-        for (int j = 0; j < appeals.size(); j++) {
+        for (int j = 0; j < reference.size(); j++) {
             if (frames.size() < size) {
-                frames.add(appeals.get(j));
-                pageErrors++;
+                frames.add(reference.get(j));
                 lackInFrames = false;
+                pageErrors++;
             } else {
                 for (int frame : frames) {
-                    if (frame == appeals.get(j)) {
+                    if (frame == reference.get(j)) {
                         lackInFrames = false;
                         break;
                     }
@@ -33,20 +35,20 @@ public class OPT {
             }
 
             if (lackInFrames) {
-                ArrayList<Integer> tab = new ArrayList<>();
+                ArrayList<Integer> copy_frame = new ArrayList<>();
                 int number = 0;
                 int index = -1;
                 int k = j;
 
                 for (int frame : frames) {
-                    tab.add(frame);
+                    copy_frame.add(frame);
                 }
 
-                while (k < appeals.size()) {
+                while (k < reference.size()) {
                     if (number < frames.size() - 1) {
-                        for (int l = 0; l < frames.size(); l++) {
-                            if (frames.get(l) == appeals.get(k)) {
-                                tab.set(l, -1);
+                        for (int l = 0; l < copy_frame.size(); l++) {
+                            if (copy_frame.get(l) == reference.get(k)) {
+                                copy_frame.set(l, -1);
                                 number++;
                                 break;
                             }
@@ -55,14 +57,13 @@ public class OPT {
                     k++;
                 }
 
-
-                for (int i = 0; i < tab.size(); i++) {
-                    if (tab.get(i) != -1) {
+                for (int i = 0; i < copy_frame.size(); i++) {
+                    if (copy_frame.get(i) != -1) {
                         index = i;
+                        // break;
                     }
                 }
-                frames.add(index, appeals.get(j));
-                frames.remove(index + 1);
+                frames.set(index, reference.get(j));
                 pageErrors++;
             }
             lackInFrames = true;
@@ -70,15 +71,21 @@ public class OPT {
         return pageErrors;
     }
 
-    public void AVG_OPT() {
+    private void AVG_OPT( int g) {
         int n = 0;
-        int result = 0;
-        while (n < 1000) {
+        double result = 0;
+        while (n < g) {
 
             result += runOPT();
             n++;
         }
-        System.out.println("OPT: " + (int) Math.floor(result / n));
+
+        System.out.printf("%6s %.2f\n", "Algorithms.OPT: ", (double) (result / n));
+    }
+
+    @Override
+    public void simulate(int number) {
+        AVG_OPT(number);
     }
 }
 

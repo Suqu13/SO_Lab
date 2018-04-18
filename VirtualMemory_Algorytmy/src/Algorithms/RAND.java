@@ -1,15 +1,16 @@
+package Algorithms;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class RAND {
+public class RAND extends Algorithm {
 
-    private ArrayList<Integer> appeals;
+    private ArrayList<Integer> reference;
     int size;
 
-    public RAND(ArrayList<Integer> appeals, int size) {
-        this.appeals = appeals;
+    public RAND(ArrayList<Integer> reference, int size) {
+        this.reference = reference;
         this.size = size;
     }
 
@@ -19,14 +20,14 @@ public class RAND {
         boolean lackInFrames = true;
         List<Integer> frames = new ArrayList<Integer>();
 
-        for (int appeal : appeals) {
+        for (int reference : reference) {
             if (frames.size() < size) {
-                frames.add(appeal);
+                frames.add(reference);
                 pageErrors++;
                 lackInFrames = false;
             } else {
                 for (int frame : frames) {
-                    if (frame == appeal) {
+                    if (frame == reference) {
                         lackInFrames = false;
                         break;
                     }
@@ -36,8 +37,7 @@ public class RAND {
             if (lackInFrames) {
                 Random generator = new Random();
                 int index = generator.nextInt(size);
-                frames.add(index, appeal);
-                frames.remove(index + 1);
+                frames.set(index, reference);
                 pageErrors++;
             }
             lackInFrames = true;
@@ -45,17 +45,21 @@ public class RAND {
         return pageErrors;
     }
 
-    public void AVG_RAND() {
+    private void AVG_RAND(int g) {
         int n = 0;
-        int result = 0;
-        while (n < 1000) {
+        double result = 0;
+        while (n < g) {
 
             result += runRAND();
             n++;
         }
-        System.out.println("RAND: " + (int) Math.floor(result / n));
+        System.out.printf("%6s %.2f\n","Algorithms.RAND: ", (result / n));
 
     }
 
 
+    @Override
+    public void simulate(int number) {
+        AVG_RAND(number);
+    }
 }
